@@ -1,0 +1,1931 @@
+<html>
+
+<head>
+    <TITLE> Cornea Datenbank </TITLE>
+    <script type="text/javascript" src="TableSort.js"></script>
+    <meta charset="UTF-8" />
+    <style>
+        #resultList {
+            position: fixed;
+            z-index: 1;
+            padding: 1rem 1rem;
+            border-radius: 5px;
+            background: #29343d;
+            max-height: calc(100vh - 50px);
+            color: #cedfe9;
+            font-size: 0.875rem;
+            width: 14rem;
+            overflow-x: auto;
+        }
+
+        #resultList::before {
+            content: "Proben";
+            font-size: larger;
+        }
+
+        #resultList>*:only-child {
+            display: none;
+        }
+
+        .tooltip {
+            position: absolute;
+            display: none;
+            z-index: 1;
+            padding: 0.25rem 1rem;
+            border-radius: 5px;
+            background: #29343d;
+            opacity: 0;
+            color: #cedfe9;
+            font-size: 0.875rem;
+            transition: opacity 500ms, transform 500ms;
+            width: 14rem;
+        }
+
+
+
+        .tooltip:before {
+            content: '';
+            position: absolute;
+            top: -9px;
+            left: calc(50% - 10px);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #29343d;
+        }
+
+        .button {
+            cursor: pointer;
+        }
+
+        .button:hover {
+            text-decoration: dotted underline;
+        }
+
+        td {
+            position: relative;
+        }
+
+        .nope {
+            display: none;
+        }
+
+        .nope:checked+.tooltip {
+            display: block;
+            opacity: 1;
+            transform: translateY(12px) translateX(calc(-7rem - 5px));
+            /*half width and half before width*/
+        }
+    </style>
+</HEAD>
+
+<body bgcolor="lightgray" text="black" alink="black" link="black" vlink="black">
+    <style type="text/css">
+        a {
+            text-decoration: none
+        }
+    </style>
+    <div id="resultList">
+        <div class="button" onclick='clearList()'>
+            Ergebnissliste leeren</div>
+    </div>
+    <center>
+        <div align='right'>
+            <p style='display:inline'>Hallo Patrick Kranz
+            <form style='display:inline' action='dbchar.php' method='post'><select name='welt'>
+                    <option value=1 selected='true'>Cornea</option>
+                    <option value=2>Ethra</option>
+                    <option value=3>Cyberpunk</option>
+                    <option value=4>Serenity</option>
+                    <option value=5>Bestiarium</option>
+                    <option value=6>Erion</option>
+                    <option value=7>Aventurien</option>
+                    <option value=8>Dupernatural</option>
+                    <option value=9>Cruel World</option>
+                    <option value=10>Cthulhu</option>
+                </select> <input type='submit' style='COLOR: black; FONT-WEIGHT: bold;' value='Startseite'
+                    title='Charakter-&Uuml;bersicht'></form> oder <form style='display:inline' action='?was=logout'
+                method='post'><input type='submit' style='COLOR: red; FONT-WEIGHT: bold;' value='Logout'
+                    title='Abmelden'></form>
+            </p>
+        </div>
+        <h2> Loki - Gesamtansicht <h2>
+                <p id='demo'></p>
+                <table border='1' width='900' cellspacing='15' bgcolor='778899' bordercolor='black' cellpadding='20'>
+                    <tr>
+                        <td width='1600' colspan=4>
+                            <center>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <form style='display:inline' action='fixier_char.php?fixier_char=841'
+                                                method='post'><input type='submit'
+                                                    style='COLOR: darkorange; FONT-WEIGHT: bold;' disabled='disabled'
+                                                    value='Fixieren'
+                                                    title='Der Charakter wird auf aktuellem Stand festgeschrieben. Steigerungen und K&auml;ufe vor diesem Stand k&ouml;nnen nicht mehr r&uuml;ckg&auml;ngig gemacht werden.'>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='phpclasses/pdfformtest.php'
+                                                method='post'><input type='submit'
+                                                    style='COLOR: darkred; FONT-WEIGHT: bold;' value='Dokument (PDF)'
+                                                    title='PDF Charakterdokument erstellen'><input type='hidden'
+                                                    name='character' value=841><input type='hidden' name='spielernummer'
+                                                    value=24></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='chardaten_aendern.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:green'
+                                                    value='Charakterdaten' title='Anpassen der Standarddaten'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='attributesteigern.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:green' value='Attribute'
+                                                    title='Zu den Attributen'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='char_verwalten.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:green'
+                                                    value='Fertigkeiten' title='Zu den Fertigkeiten'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline'
+                                                action='potentialvorschlagen.php?charnummer=841' method='post'><input
+                                                    type='submit' style='color:green' value='Potential'
+                                                    title='Zum Potential'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='vorteile.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:green' value='Vorteile'
+                                                    title='Zu den Vorteilen'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='showcharakter.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:blue'
+                                                    value='Gesamtansicht' title='Zur Charakteransicht'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='notizen.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:blue' value='Notizen'
+                                                    title='Zu den Notizen'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline'
+                                                action='gruppen_verwalten_neu.php?charnummer=841' method='post'><input
+                                                    type='submit' style='color:blue' value='Gruppen'
+                                                    title='Zu den Gruppen'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='ruestung.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:red'
+                                                    value='R&uuml;stung' title='Zur R&uuml;stung'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='wunde.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:red' value='Wunden'
+                                                    title='Wunden und Verletzungen'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline' action='kampfsicht2nahkampf.php?charnummer=841'
+                                                method='post'><input type='submit' style='color:red' value='Nahkampf'
+                                                    title='Zur Nahkampfsicht'></form>
+                                        </td>
+                                        <td>
+                                            <form style='display:inline'
+                                                action='kampfsicht2fernkampf.php?charnummer=841' method='post'><input
+                                                    type='submit' style='color:red' value='Fernkampf'
+                                                    title='Zur Fernkampfsicht'></form>
+                                        </td>
+                                    </tr>
+                                </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center>
+                                <table border='1' cellspacing='5' bordercolor='black'>
+                                    <tr>
+                                        <td colspan='7'>
+                                            <center><img src='image.php?character=841' border='0' alt='Avatar'>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <center>Name
+                                        </td>
+                                        <td>
+                                            <center>Gewicht
+                                        </td>
+                                        <td>
+                                            <center>Gr&ouml;sse
+                                        </td>
+                                        <td>
+                                            <center>Alter
+                                        </td>
+                                        <td>
+                                            <center>Typ
+                                        </td>
+                                        <td>
+                                            <center>Rasse
+                                        </td>
+                                        <td>
+                                            <center>Gesinnung
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width='200'>
+                                            <center>Loki
+                                        </td>
+                                        <td width='60'>
+                                            <center>70
+                                        </td>
+                                        <td width='60'>
+                                            <center>180
+                                        </td>
+                                        <td width='60'>
+                                            <center>16
+                                        </td>
+                                        <td width='150'>
+                                            <center>Ich
+                                        </td>
+                                        <td width='180' bgcolor='plum'>
+                                            <center>Mensch
+                                        </td>
+                                        <td width='250'>
+                                            <center>Auch Ich
+                                        </td>
+                                    </tr>
+                                </table><br><br>
+                                <table border='1' cellspacing='5' bordercolor='black'>
+                                    <tr>
+                                        <td width='150'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Grunderschwernis'>Grunderschwernis</a>
+                                        </td>
+                                        <td width='150'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Magieresistenz'>Magieresistenz</a>
+                                        </td>
+                                        <td width='150'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Verteidigungspassiv'>Verteidigungspassiv</a>
+                                        </td>
+                                        <td width='150'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Ausdauerpool'>Ausdauer</a>
+                                        </td>
+                                        <td width='150'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Konzentrationspool'>Konzentration</a>
+                                        </td>
+                                        <td width='150'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Manapool'>Mana</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width='60'>
+                                            <center>10
+                                        </td>
+                                        <td width='60'>
+                                            <center>min: 2 max: 7
+                                        </td>
+                                        <td width='60'>
+                                            <center>min: 4 max: 11
+                                        </td>
+                                        <td width='60'>
+                                            <center>36
+                                        </td>
+                                        <td width='60'>
+                                            <center>26
+                                        </td>
+                                        <td width='60'>
+                                            <center>24
+                                        </td>
+                                </table><br><br>
+                                <table border='1' cellspacing='5' bordercolor='black'>
+                                    <tr>
+                                        <td colspan='2'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Pools'>Attributspunkte</a>
+                                        </td>
+                                        <td colspan='2'>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Pools'>Fertigkeitspunkte</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width='150'>
+                                            <center>eingesetzt
+                                        </td>
+                                        <td width='150'>
+                                            <center>verf&uuml;gbar
+                                        </td>
+                                        <td width='150'>
+                                            <center>eingesetzt
+                                        </td>
+                                        <td width='150'>
+                                            <center>verf&uuml;gbar
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width='150'>
+                                            <center>92
+                                        </td>
+                                        <td width='150'>
+                                            <center>8
+                                        </td>
+                                        <td width='150'>
+                                            <center>492
+                                        </td>
+                                        <td width='150'>
+                                            <center>999958
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                </table><br><br>
+                                <table border='1' cellspacing='5' bordercolor='black'>
+                                    <tr>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Muskeln'>Muskeln</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Grobmotorik'>Grobmotorik</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Feinmotorik'>Feinmotorik</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Reflexe'>Reflexe</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Zähigkeit'>Zähigkeit</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width='25'>
+                                            <center>3
+                                        </td>
+                                        <td width='25' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='navyblue' onclick='performAttributeProbe(3)'>
+                                            <center>3
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(3)'>
+                                            <center>3
+                                        </td>
+                                        <td width='25'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='navyblue' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25'>
+                                            <center>3
+                                        </td>
+                                        <td width='25' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='navyblue' onclick='performAttributeProbe(3)'>
+                                            <center>3
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(3)'>
+                                            <center>3
+                                        </td>
+                                        <td width='25'>
+                                            <center>4
+                                        </td>
+                                        <td width='25' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='navyblue' onclick='performAttributeProbe(4)'>
+                                            <center>4
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(4)'>
+                                            <center>4
+                                        </td>
+                                        <td width='25'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='navyblue' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan=5></td>
+                                    </tr>
+                                    <tr>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Klugheit'>Klugheit</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Imagination'>Imagination</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Wille'>Wille</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Wahrnehmung'>Wahrnehmung</a>
+                                        </td>
+                                        <td width='100' colspan=5>
+                                            <center><a target='_blank'
+                                                    href='https://dreibart.de/wiki/index.php/Ausstrahlung'>Ausstrahlung</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width='33'>
+                                            <center>3
+                                        </td>
+                                        <td width='33' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='33' bgcolor='navyblue' onclick='performAttributeProbe(3)'>
+                                            <center>3
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(3)'>
+                                            <center>3
+                                        </td>
+                                        <td width='33'>
+                                            <center>2
+                                        </td>
+                                        <td width='33' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='33' bgcolor='navyblue' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='33'>
+                                            <center>2
+                                        </td>
+                                        <td width='33' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='33' bgcolor='navyblue' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='33'>
+                                            <center>2
+                                        </td>
+                                        <td width='33' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='33' bgcolor='navyblue' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='33'>
+                                            <center>2
+                                        </td>
+                                        <td width='33' bgcolor='plum'>
+                                            <center>0
+                                        </td>
+                                        <td width='25' bgcolor='gray'>
+                                            <center>0
+                                        </td>
+                                        <td width='33' bgcolor='navyblue' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                        <td width='25' bgcolor='orange' onclick='performAttributeProbe(2)'>
+                                            <center>2
+                                        </td>
+                                    </tr>
+                                </table><br>
+                                <table border='1' cellspacing='5' cellpadding='5' bordercolor='black'>
+                                    <tr>
+                                        <td colspan='2'></td>
+                                        <td colspan='2' bgcolor='green' width='100'>
+                                            <center><a href='veranlagungenaendern.php?charnummer=841'>Körper</a>
+                                        </td>
+                                        <td colspan='2'></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td colspan='2' bgcolor='yellow' width='100'>
+                                            <center><a href='veranlagungenaendern.php?charnummer=841'>Kultur</a>
+                                        </td>
+                                        <td colspan='2' bgcolor='yellow' width='100'>
+                                            <center><a href='veranlagungenaendern.php?charnummer=841'>Ausdauer</a>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan='2' bgcolor='red' width='100'>
+                                            <center><a href='veranlagungenaendern.php?charnummer=841'>Kulte</a>
+                                        </td>
+                                        <td colspan='2' bgcolor='red' width='100'>
+                                            <center><a href='veranlagungenaendern.php?charnummer=841'>Mana</a>
+                                        </td>
+                                        <td colspan='2' bgcolor='red' width='100'>
+                                            <center><a href='veranlagungenaendern.php?charnummer=841'>Konzentration</a>
+                                        </td>
+                                    </tr>
+                                </table><br>
+                                <form action='showcharakter.php?charnummer=841' method='post'>
+                                    <table style='page-break-before:always'>
+                                        <center>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:K&ouml;rper_Fertigkeitspakete'>K&ouml;rper</a>
+                                                                    </h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Bewegen'>Bewegen</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Laufen'>Laufen</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>7</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(11,7,10)'>11</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(11,7,10)'>11</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Schwimmen'>Schwimmen</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>3</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(7,3,10)'>7</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(7,3,10)'>7</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Schleichen'>Schleichen</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>6</td>
+                                                                        <td width='25' bgcolor='navyblue'><label
+                                                                                for="nopeKletern"> 10 </label>
+                                                                            <input id="nopeKletern" class="nope"
+                                                                                name="tooltip" type="radio" />
+                                                                            <div class="tooltip">
+                                                                                <div class="button"
+                                                                                    style="float: right;"
+                                                                                    onclick='closeAll()'>x</div>
+                                                                                <div class="button"
+                                                                                    onclick='performSkillProbe(10,6,10,"Schleichen")'>
+                                                                                    Probe
+                                                                                    10</div>
+                                                                                <div class="button"
+                                                                                    onclick='performSkillProbe(10,6,10,"Schleichen",3)'>
+                                                                                    Unterstützung
+                                                                                    / 3</div>
+                                                                                <div class="button"
+                                                                                    onclick='performSkillProbe(10,6,10,"Schleichen",5)'>
+                                                                                    Unterstützung
+                                                                                    / 5</div>
+
+
+
+                                                                            </div>
+                                                                        </td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(10,6,10)'>10</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Springen'>Springen</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>3</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(8,3,10)'>8</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(8,3,10)'>8</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Klettern'>Klettern</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>7</td>
+                                                                        <td width='25' bgcolor='navyblue'><label
+                                                                                for="klettern-foo"> 12
+                                                                            </label>
+                                                                            <input id="klettern-foo" class="nope"
+                                                                                name="tooltip" type="radio" />
+                                                                            <div class="tooltip">
+                                                                                <div class="button"
+                                                                                    style="float: right;"
+                                                                                    onclick='closeAll()'>x</div>
+                                                                                <div class="button"
+                                                                                    onclick='performSkillProbe(12,7,10,"Klettern")'>
+                                                                                    Probe</div>
+                                                                                <div class="button"
+                                                                                    onclick='performSkillProbe(12,7,10,"Klettern",3)'>
+                                                                                    Unterstützung
+                                                                                    / 3</div>
+                                                                                <div class="button"
+                                                                                    onclick='performSkillProbe(12,7,10,"Klettern",5)'>
+                                                                                    Unterstützung
+                                                                                    / 5</div>
+
+                                                                            </div>
+                                                                        </td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(12,7,10)'>12</td>
+
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Detailwahrnehmung'>Detailwahrnehmung</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Ablauf erfassen'>Ablauf
+                                                                                erfassen</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Abweichung erkennen'>Abweichung
+                                                                                erkennen</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Mustervergleich'>Mustervergleich</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Oberflächenanalyse'>Oberflächenanalyse</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Tiefenanalyse'>Tiefenanalyse</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Gaukelei'>Gaukelei</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Feuerkünste'>Feuerkünste</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Taschenspielertricks'>Taschenspielertricks</a>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>FM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Jonglieren'>Jonglieren</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Jahrmarktsakrobatik'>Jahrmarktsakrobatik</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Narretei'>Narretei</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Körperkontrolle'>Körperkontrolle</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Gleichgewicht'>Gleichgewicht</a>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Hechtsprung'>Hechtsprung</a>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Muskelkontrolle'>Muskelkontrolle</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Schmerzen ertragen'>Schmerzen
+                                                                                ertragen</a>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Trinkfestigkeit'>Trinkfestigkeit</a>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Nahkampf Grundlagen'>Nahkampf
+                                                                                    Grundlagen</a></strong></td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Schlag'>Schlag</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Blocken'>Blocken</a>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Stoßen'>Stoßen</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Abdrängen'>Abdrängen</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Abstand halten'>Abstand
+                                                                                halten</a>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Wachsamkeit'>Wachsamkeit</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Beobachten'>Beobachten</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Spähen'>Spähen</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr bgcolor='darkcyan'>
+                                                                        <td width='255'><input type='checkbox'
+                                                                                name='skill1' value='553' id='check1'><a
+                                                                                target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Konzentration'>Konzentration</a>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Räumliche Vorstellung'>Räumliche
+                                                                                Vorstellung</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Wache halten'>Wache
+                                                                                halten</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Waffenloser Kampfmeister'>Waffenloser
+                                                                                    Kampfmeister</a></strong></td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Muskeln stählen'>Muskeln
+                                                                                stählen</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>GM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Muskeln lockern'>Muskeln
+                                                                                lockern</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(7,0,10)'>7</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(7,0,10)'>7</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Mentale Vorbereitung'>Mentale
+                                                                                Vorbereitung</a>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Eisenhaut'>Eisenhaut</a>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>MU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Sinne schärfen'>Sinne
+                                                                                schärfen</a>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>ZÄ</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Wahrnehmung'>Wahrnehmung</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Situation erfassen'>Situation
+                                                                                erfassen</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Sehen / Suchen'>Sehen
+                                                                                / Suchen</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Hören / Lauschen'>Hören
+                                                                                / Lauschen</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Fühlen / Tasten'>Fühlen
+                                                                                / Tasten</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Gefahreninstinkt'>Gefahreninstinkt</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'></table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:Handwerk_Fertigkeitspakete'>Handwerk</a>
+                                                                        <h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr> </tr>
+                                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:Kultur_Fertigkeitspakete'>Kultur</a>
+                                                                        <h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Auftreten'>Auftreten</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Selbstbeherrschung'>Selbstbeherrschung</a>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Manipulation'>Manipulation</a>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Etikette'>Etikette</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Unscheinbarkeit'>Unscheinbarkeit</a>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Imposante Erscheinung'>Imposante
+                                                                                Erscheinung</a>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Grundbildung'>Grundbildung</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Grundbildung (Schule)'>Grundbildung
+                                                                                (Schule)</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Geschichte'>Geschichte</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Landeskunde'>Landeskunde</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Naturkunde'>Naturkunde</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Körperkunde'>Körperkunde</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Meditationstechniken'>Meditationstechniken</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Entspannen'>Entspannen</a>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>RE</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Meditation'>Meditation</a>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Einstimmung'>Einstimmung</a>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                    <tr bgcolor='darkcyan'>
+                                                                        <td width='255'><input type='checkbox'
+                                                                                name='skill2' value='154' id='check1'><a
+                                                                                target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Konzentration'>Konzentration</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>WI</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Einfühlung'>Einfühlung</a>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(4,0,10)'>4</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='grey'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/Weiterbildung'>Weiterbildung</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Logik'>Logik</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(6,0,10)'>6</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Literaturgebrauch'>Literaturgebrauch</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Sprachverständnis'>Sprachverständnis</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>IM</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Politik / Strategie'>Politik
+                                                                                / Strategie</a>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>AU</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Navigation / Geografie'>Navigation
+                                                                                / Geografie</a>
+                                                                        <td width='25'>WA</td>
+                                                                        <td width='25'>KL</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(5,0,10)'>5</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'></table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'></table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:M&auml;chte_Fertigkeitspakete'>M&auml;chte</a>
+                                                                        <h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr> </tr>
+                                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:Kulte_Fertigkeitspakete'>Kulte</a>
+                                                                        <h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr> </tr>
+                                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:Sprachen_Fertigkeitspakete'>Sprachen</a>
+                                                                        <h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'>
+                                                                    <tr>
+                                                                        <td colspan='5' bgcolor='green'><strong><a
+                                                                                    target='_blank'
+                                                                                    href='https://dreibart.de/wiki/index.php/(Sprache) {Mydos} [1] Mydorna'>(Sprache)
+                                                                                    {Mydos} [1] Mydorna</a></strong>
+                                                                        </td>
+                                                                        <td>
+                                                                            <center>0
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Wortschatz'>Wortschatz</a>
+                                                                        </td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>20</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(0,0,10)'>20</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(0,0,10)'>20</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Lesen & Schreiben'>Lesen
+                                                                                & Schreiben</a></td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(0,0,10)'>0</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(0,0,10)'>0</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Sprachfluss'>Sprachfluss</a>
+                                                                        </td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>20</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(0,0,10)'>20</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(0,0,10)'>20</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Dialekte & Kulturen'>Dialekte
+                                                                                & Kulturen</a></td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>20</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(0,0,10)'>20</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(0,0,10)'>20</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width='255'><a target='_blank'
+                                                                                href='https://dreibart.de/wiki/index.php/Hochsprache & Grammatik'>Hochsprache
+                                                                                & Grammatik</a></td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>-</td>
+                                                                        <td width='25'>0</td>
+                                                                        <td width='25' bgcolor='navyblue'
+                                                                            onclick='performSkillProbe(0,0,10)'>0</td>
+                                                                        <td width='25' bgcolor='orange'
+                                                                            onclick='performSkillProbe(0,0,10)'>0</td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'></table>
+                                                            </td>
+                                                            <td>
+                                                                <table border='1' cellpadding='5' width='330'></table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top'>
+                                                    <table cellpadding='5'>
+                                                        <tr>
+                                                            <td width='1000' colspan='3'>
+                                                                <center>
+                                                                    <h2><a target='_blank'
+                                                                            href='https://dreibart.de/wiki/index.php/Kategorie:Klerus_Fertigkeitspakete'>Klerus</a>
+                                                                        <h2>
+                                                            </td>
+                                                        </tr>
+                                                        <tr> </tr>
+                                                    </table>
+                                            </tr>
+                                            <table border='1' cellspacing='5' bordercolor='black'>
+                                                <tr>
+                                                    <td width='1000' bgcolor='darkcyan'>
+                                                        <center><input type='submit'
+                                                                style='COLOR: darkcyan; FONT-WEIGHT: bold;'
+                                                                value='Umschalten der Markierung f&uuml;r ausgw&auml;hlte Fertigkeiten'
+                                                                title='Der Test.'>
+                                </form>
+                        </td>
+                    </tr>
+                </table>
+                <table border='1' cellspacing='5' bordercolor='black'>
+                    <tr>
+                        <h2>Vorteile</h2>
+                    <tr>
+                        <td width='250'>
+                            <center>Vorteil
+                        </td>
+                        <td width='60'>
+                            <center>Stufe
+                        </td>
+                    </tr>
+                    <tr bgcolor='lightgrey'>
+                        <td width='250'>
+                            <center> Vorteile vom Typ Charakter
+                        </td>
+                        <td width='60'>
+                            <center>Stufe
+                        </td>
+                    </tr>
+                    <tr bgcolor='plum'>
+                        <td>
+                            <center><a target='_blank'
+                                    href='https://dreibart.de/wiki/index.php/Glaubensstärke '>Glaubensstärke
+                                    [Charakter]</a>
+                        </td>
+                        <td>
+                            <center> 10 / 10
+                        </td>
+                    </tr>
+                    <tr bgcolor='plum'>
+                        <td>
+                            <center><a target='_blank' href='https://dreibart.de/wiki/index.php/Intuition '>Intuition
+                                    [Charakter]</a>
+                        </td>
+                        <td>
+                            <center> 2 / 10
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center><a target='_blank'
+                                    href='https://dreibart.de/wiki/index.php/Leichtgläubig '>Leichtgläubig [Charakter]
+                                    [Erstellung] [Nachteil]</a>
+                        </td>
+                        <td>
+                            <center> 1 / 10
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <center><a target='_blank' href='https://dreibart.de/wiki/index.php/Neugierig '>Neugierig
+                                    [Charakter] [Erstellung] [Nachteil]</a>
+                        </td>
+                        <td>
+                            <center> 1 / 10
+                        </td>
+                    </tr>
+                </table>
+                <table border='1' cellspacing='5' bordercolor='black'>
+                    <tr>
+                        <h2>Zauberspr&uuml;che</h2>
+                    </tr>
+                    <tr />
+                    <tr bgcolor='lightgray'>
+                        <td colspan='5'>
+                            <center>Gesamterschwernis f&uuml;r Spruchged&auml;chtnis
+                        </td>
+                        <td>
+                            <center>0
+                        </td>
+                    </tr>
+                </table>
+                <tr>
+                    <td width='1600' colspan=4>
+                        <center>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <form style='display:inline' action='fixier_char.php?fixier_char=841'
+                                            method='post'><input type='submit'
+                                                style='COLOR: darkorange; FONT-WEIGHT: bold;' disabled='disabled'
+                                                value='Fixieren'
+                                                title='Der Charakter wird auf aktuellem Stand festgeschrieben. Steigerungen und K&auml;ufe vor diesem Stand k&ouml;nnen nicht mehr r&uuml;ckg&auml;ngig gemacht werden.'>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='phpclasses/pdfformtest.php' method='post'>
+                                            <input type='submit' style='COLOR: darkred; FONT-WEIGHT: bold;'
+                                                value='Dokument (PDF)' title='PDF Charakterdokument erstellen'><input
+                                                type='hidden' name='character' value=841><input type='hidden'
+                                                name='spielernummer' value=24>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='chardaten_aendern.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:green'
+                                                value='Charakterdaten' title='Anpassen der Standarddaten'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='attributesteigern.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:green' value='Attribute'
+                                                title='Zu den Attributen'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='char_verwalten.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:green' value='Fertigkeiten'
+                                                title='Zu den Fertigkeiten'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='potentialvorschlagen.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:green' value='Potential'
+                                                title='Zum Potential'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='vorteile.php?charnummer=841' method='post'>
+                                            <input type='submit' style='color:green' value='Vorteile'
+                                                title='Zu den Vorteilen'>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='showcharakter.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:blue' value='Gesamtansicht'
+                                                title='Zur Charakteransicht'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='notizen.php?charnummer=841' method='post'>
+                                            <input type='submit' style='color:blue' value='Notizen'
+                                                title='Zu den Notizen'>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='gruppen_verwalten_neu.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:blue' value='Gruppen'
+                                                title='Zu den Gruppen'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='ruestung.php?charnummer=841' method='post'>
+                                            <input type='submit' style='color:red' value='R&uuml;stung'
+                                                title='Zur R&uuml;stung'>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='wunde.php?charnummer=841' method='post'>
+                                            <input type='submit' style='color:red' value='Wunden'
+                                                title='Wunden und Verletzungen'>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='kampfsicht2nahkampf.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:red' value='Nahkampf'
+                                                title='Zur Nahkampfsicht'></form>
+                                    </td>
+                                    <td>
+                                        <form style='display:inline' action='kampfsicht2fernkampf.php?charnummer=841'
+                                            method='post'><input type='submit' style='color:red' value='Fernkampf'
+                                                title='Zur Fernkampfsicht'></form>
+                                    </td>
+                                </tr>
+                            </table>
+                    </td>
+                </tr>
+                </table>
+    </center>
+
+    <script>
+        function clearList() {
+            document.getElementById("resultList").innerHTML = `<div class="button" onclick='clearList()'>
+            Ergebnissliste leeren</div>`;
+        }
+        function closeAll() {
+            const nopes = document.getElementsByClassName('nope');
+            for (const n of nopes) {
+                n.checked = false;
+            }
+        }
+        function transmittPotential(potential) {
+            alert(`got ${potential} potentiel, TODO implement`)
+        }
+        function performSkillProbe(value, baseValue, baseDifficulty, skillName, supportDivider) {
+            let w1 = randomNumber(1, 10);
+            let w2 = randomNumber(1, 10);
+            let diceResult = w1 + w2;
+            let probe = diceResult + value;
+            let krit = "";
+            let potential = 0;
+            let support = 0;
+
+            if (w1 === w2) {
+                krit = "KRITISCH";
+                switch (diceResult) {
+                    case 2: potential = 5; krit = krit + "ER PATZER"; probe = probe - baseDifficulty; break;
+                    case 4: potential = 3; break;
+                    case 6, 8, 10: potential = 2; break;
+                    case 20: potential = 1; krit = krit + "E GLUECKLICHE PROBE (Alte Seele)"; break;
+                    default: potential = 1;
+                }
+            }
+
+            if (baseValue < 5 && diceResult >= 10)
+                potential++;
+            else if (baseValue <= 9 && diceResult >= 12)
+                potential++;
+            else if (baseValue <= 14 && diceResult >= 14)
+                potential++;
+            else if (baseValue <= 19 && diceResult >= 16)
+                potential++;
+            else if (baseValue <= 24 && diceResult >= 18)
+                potential++;
+            else if (baseValue <= 30 && diceResult >= 20)
+                potential++;
+
+            const r = " Wert " + value + " + W10<" + w1 + "> + W10<" + w2 + "> --> Ergebnis: " + probe + " Potential: " + potential + " " + krit;
+
+            if (supportDivider) {
+                if (!window.support)
+                    window.support = 0;
+                window.support += Math.floor(probe / supportDivider);
+            } else if (window.support) {
+                support = window.support;
+                window.support = undefined;
+            }
+
+
+            if (skillName) {
+                // const resultDiv = document.getElementById(resultId);
+                const resultDiv = document.getElementById('resultList');
+                const potentialString = potential == 0 ? 'Kein Potentiel erhalten'
+                    : `<div>${potential} Erhalten <em style="cursor:pointer;" onclick='transmittPotential(${potential})'>übernehmen?</em></div>`;
+                const supportText = supportDivider ? `<div>Bonus: ${Math.floor(probe / supportDivider)}</div>` : "";
+                const previousSupport = support ? ` + ${support}` : '';
+                resultDiv.innerHTML += `<hr/>
+                <h1>${skillName}</h1>
+<div>Würfel <b>${w1}</b>, <b>${w2} ${krit}</b></div>
+<div>${value}${previousSupport} + ${w1 + w2} = <b>${probe}</b></div>
+${potentialString}
+${supportText}
+`;
+                resultDiv.scrollTo(0, resultDiv.scrollHeight);
+
+            } else {
+                alert(r);
+            }
+        }
+
+        function performAttributeProbe(value) {
+            var txt;
+            w1 = randomNumber(1, 10);
+            txt = alert("Wert " + value + " + W10<" + w1 + "> --> Ergebnis: " + (w1 + value));
+        }
+
+        function randomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+    </script>
+
+</body>
+
+</html>
